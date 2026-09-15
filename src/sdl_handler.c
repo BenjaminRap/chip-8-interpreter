@@ -23,17 +23,17 @@ bool	init_handler(sdl_handler_t* handler) {
 
 	if (error != 0)
 		goto error;
-	SDL_Window* window = SDL_CreateWindow("chip-8", SDL_WINDOWPOS_CENTERED,
+	handler->window = SDL_CreateWindow("chip-8", SDL_WINDOWPOS_CENTERED,
 			SDL_WINDOWPOS_CENTERED, DISPLAY_SIZE_X, DISPLAY_SIZE_Y,
 			SDL_WINDOW_MAXIMIZED);
 
-	if (window == NULL)
+	if (handler->window == NULL)
 		goto error;
 
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1,
+	handler->renderer = SDL_CreateRenderer(handler->window, -1,
 			SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-	if (renderer == NULL)
+	if (handler->renderer == NULL)
 		goto error;
 	return true;
 error:

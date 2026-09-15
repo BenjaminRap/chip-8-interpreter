@@ -1,5 +1,5 @@
-#ifndef SDL_HANDLER
-# define SDL_HANDLER
+#ifndef SDL_HANDLER_H
+# define SDL_HANDLER_H
 
 # include <SDL2/SDL_render.h>
 # include <SDL2/SDL_video.h>
@@ -18,4 +18,4 @@ typedef struct sdl_handler_s {
 bool	init_handler(sdl_handler_t* handler);
 void	clear_handler(sdl_handler_t* handler);
 
-#endif // !SDL_HANDLER
+#endif // !SDL_HANDLER_H

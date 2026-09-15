@@ -1,8 +1,10 @@
+#include "interpreter.h"
 #include "sdl_handler.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
+#include <stdio.h>
 #include <strings.h>
 
 bool clear_screen(sdl_handler_t* sdl_handler) {
@@ -16,15 +18,21 @@ bool clear_screen(sdl_handler_t* sdl_handler) {
 	return true;
 }
 
-int main(void)
+int main(int argc, char **argv)
 {
-	sdl_handler_t	sdl_handler;
-	bool 			initiated = init_handler(&sdl_handler);
+	if (argc != 2) {
+		fprintf(stderr, "Wrong number of arguments, expected one, the program to run.");
+		return EXIT_FAILURE;
+	}
+	interpreter_t	interpreter;
+
+	bool initiated = init_interpreter(&interpreter, argv[1]);
 
 	if (!initiated)
 		return EXIT_FAILURE;
-	clear_screen(&sdl_handler);
-	SDL_Delay(6000);
-	clear_handler(&sdl_handler);
+	fwrite(interpreter.memory, sizeof(char), interpreter.program_size, stdout);
+	clear_screen(&interpreter.sdl_handler);
+	SDL_Delay(3000);
+	clear_interpreter(&interpreter);
     return EXIT_SUCCESS;
 }

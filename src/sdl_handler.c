@@ -5,7 +5,7 @@
 #include "sdl_handler.h"
 
 void	clear_handler(sdl_handler_t* handler) {
-	if (handler == NULL)
+	if (!handler)
 		return ;
 	if (handler->renderer)
 		SDL_DestroyRenderer(handler->renderer);
@@ -23,6 +23,7 @@ bool	init_handler(sdl_handler_t* handler) {
 
 	if (error != 0)
 		goto error;
+	handler->sdl_initiated = true;
 	handler->window = SDL_CreateWindow("chip-8", SDL_WINDOWPOS_CENTERED,
 			SDL_WINDOWPOS_CENTERED, DISPLAY_SIZE_X, DISPLAY_SIZE_Y,
 			SDL_WINDOW_MAXIMIZED);

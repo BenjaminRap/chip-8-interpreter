@@ -10,7 +10,8 @@ OBJ_DIR		:= build
 
 
 SRC_FILES	:=	main.c \
-				sdl_handler.c
+				sdl_handler.c \
+				interpreter.c
 SRC			:= $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJ			:= $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 DEP			:= $(OBJ:.o=.d)

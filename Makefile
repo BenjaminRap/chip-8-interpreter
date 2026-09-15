@@ -2,8 +2,8 @@ NAME		:= chip-8-interpreter
 
 CC			:= gcc
 CFLAGS		:= -Wall -Wextra -Werror -MMD -MP
-LDFLAGS		:=
-LDLIBS		:=
+LDFLAGS		:= -I/usr/include/SDL2 -D_REENTRANT
+LDLIBS		:= -lSDL2
 
 SRC_DIR		:= src
 OBJ_DIR		:= build

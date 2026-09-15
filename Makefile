@@ -1,7 +1,7 @@
 NAME		:= chip-8-interpreter
 
 CC			:= gcc
-CFLAGS		:= -Wall -Wextra -Werror -MMD -MP
+CFLAGS		:= -Wall -Wextra -Werror -MMD -MP -Iheaders
 LDFLAGS		:= -I/usr/include/SDL2 -D_REENTRANT
 LDLIBS		:= -lSDL2
 

@@ -1,21 +1,37 @@
 #include "interpreter.h"
-#include "sdl_handler.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_error.h>
+#include <SDL2/SDL_events.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 #include <stdio.h>
 #include <strings.h>
 
-bool clear_screen(sdl_handler_t* sdl_handler) {
-	if (SDL_SetRenderDrawColor(sdl_handler->renderer, 0, 0, 0, 255) < 0
-		|| SDL_RenderClear(sdl_handler->renderer) < 0) {
-		fprintf(stderr, "%s", SDL_GetError());
+bool	handle_events(void) {
+	SDL_Event	event;
 
-		return false;
+	while (SDL_PollEvent(&event)) {
+		if (event.type == SDL_QUIT)
+			return false;
 	}
-	SDL_RenderPresent(sdl_handler->renderer);
 	return true;
+}
+
+void	execute_instruction(const char* instruction) {
+	fwrite(instruction, 1, 4, stdout);
+}
+
+void	main_loop(interpreter_t* interpreter) {
+	while (interpreter->program_counter <= interpreter->program_size - 4) {
+		if (!handle_events())
+			return ;
+		const char* current_instruction = interpreter->memory + interpreter->program_counter;
+
+		execute_instruction(current_instruction);
+		interpreter->program_counter += 4;
+        SDL_RenderPresent(interpreter->sdl_handler.renderer);
+		SDL_Delay(16);
+	}
 }
 
 int main(int argc, char **argv)
@@ -30,9 +46,8 @@ int main(int argc, char **argv)
 
 	if (!initiated)
 		return EXIT_FAILURE;
-	fwrite(interpreter.memory, sizeof(char), interpreter.program_size, stdout);
-	clear_screen(&interpreter.sdl_handler);
-	SDL_Delay(3000);
+	SDL_SetRenderDrawColor(interpreter.sdl_handler.renderer, 0, 0, 0, 255);
+	main_loop(&interpreter);
 	clear_interpreter(&interpreter);
     return EXIT_SUCCESS;
 }

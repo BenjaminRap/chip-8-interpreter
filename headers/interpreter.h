@@ -10,6 +10,7 @@ typedef struct interpreter_s {
 	sdl_handler_t	sdl_handler;
 	char*			memory;
 	size_t			program_size;
+	size_t			program_counter;
 } interpreter_t;
 
 bool	init_interpreter(interpreter_t* interpreter, char* program_size);

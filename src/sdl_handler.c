@@ -18,7 +18,7 @@ void	clear_handler(sdl_handler_t* handler) {
 bool	init_handler(sdl_handler_t* handler) {
 	bzero(handler, sizeof(sdl_handler_t));
 
-    int error = SDL_Init(SDL_INIT_VIDEO);
+    int error = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 
 	if (error)
 		goto error;

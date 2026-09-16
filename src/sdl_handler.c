@@ -1,6 +1,5 @@
 #include <SDL2/SDL.h>
 #include <stdbool.h>
-#include <wchar.h>
 
 #include "sdl_handler.h"
 
@@ -21,20 +20,20 @@ bool	init_handler(sdl_handler_t* handler) {
 
     int error = SDL_Init(SDL_INIT_VIDEO);
 
-	if (error != 0)
+	if (error)
 		goto error;
 	handler->sdl_initiated = true;
 	handler->window = SDL_CreateWindow("chip-8", SDL_WINDOWPOS_CENTERED,
 			SDL_WINDOWPOS_CENTERED, DISPLAY_SIZE_X, DISPLAY_SIZE_Y,
 			SDL_WINDOW_MAXIMIZED);
 
-	if (handler->window == NULL)
+	if (!handler->window)
 		goto error;
 
 	handler->renderer = SDL_CreateRenderer(handler->window, -1,
 			SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-	if (handler->renderer == NULL)
+	if (!handler->renderer)
 		goto error;
 	return true;
 error:

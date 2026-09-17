@@ -10,43 +10,19 @@
 #include "interpreter.h"
 #include "instructions.h"
 
-bool	handle_events(void) {
-	SDL_Event	event;
-
-	while (SDL_PollEvent(&event)) {
-		if (event.type == SDL_QUIT)
-			return false;
-	}
-	return true;
-}
-
-bool	execute_instruction(const instruction_t instruction, interpreter_t* interpreter) {
-	switch (instruction.opcode) {
-		case 0x0:
-			if (instruction.nnn == 0x0E0)
-				return clear_screen(interpreter->sdl_handler.renderer);
-			if (instruction.nnn == 0x0EE)
-				return call_subroutine();
-			break;
-		case 0x1:
-			return jump();
-			break;
-	}
-	uint8_t*	instruction_bytes = (uint8_t*)&instruction;
-
-	fprintf( stderr, "Unknown instruction : %X%X", instruction_bytes[0], instruction_bytes[1]);
-	return false;
-}
+bool	execute_instruction(const instruction_t instr, interpreter_t* inter);
+bool	handle_events(void);
 
 bool	main_loop(interpreter_t* interpreter) {
 	while (interpreter->program_counter <= interpreter->program_size - 2) {
 		if (!handle_events())
 			return true;
-		const instruction_t current_instruction = *(instruction_t*)(interpreter->memory + interpreter->program_counter);
+		const uint16_t* data = interpreter->memory + interpreter->program_counter;
+		const instruction_t instruction = extract_instruction(*data);
 
-		if (execute_instruction(current_instruction, interpreter))
+		if (execute_instruction(instruction, interpreter))
 			return false;
-		interpreter->program_counter += 2;
+		interpreter->program_counter += INSTRUCTION_SIZE;
 		SDL_Delay(16);
 	}
 	return true;

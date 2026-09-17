@@ -12,6 +12,8 @@ typedef struct interpreter_s {
 	uint16_t		program_size;
 	uint16_t		program_counter;
 	uint16_t		stack_size;
+	uint16_t		index_register;
+	uint8_t			registers[16];
 } interpreter_t;
 
 bool	init_interpreter(interpreter_t* interpreter, char* program_size);

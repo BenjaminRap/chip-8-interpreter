@@ -1,11 +1,14 @@
-#include "interpreter.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <strings.h>
+
+#include "interpreter.h"
+#include "instructions.h"
 
 bool	handle_events(void) {
 	SDL_Event	event;
@@ -17,21 +20,36 @@ bool	handle_events(void) {
 	return true;
 }
 
-void	execute_instruction(const char* instruction) {
-	fwrite(instruction, 1, 4, stdout);
+bool	execute_instruction(const instruction_t instruction, interpreter_t* interpreter) {
+	switch (instruction.opcode) {
+		case 0x0:
+			if (instruction.nnn == 0x0E0)
+				return clear_screen(interpreter->sdl_handler.renderer);
+			if (instruction.nnn == 0x0EE)
+				return call_subroutine();
+			break;
+		case 0x1:
+			return jump();
+			break;
+	}
+	uint8_t*	instruction_bytes = (uint8_t*)&instruction;
+
+	fprintf( stderr, "Unknown instruction : %X%X", instruction_bytes[0], instruction_bytes[1]);
+	return false;
 }
 
-void	main_loop(interpreter_t* interpreter) {
-	while (interpreter->program_counter <= interpreter->program_size - 4) {
+bool	main_loop(interpreter_t* interpreter) {
+	while (interpreter->program_counter <= interpreter->program_size - 2) {
 		if (!handle_events())
-			return ;
-		const char* current_instruction = interpreter->memory + interpreter->program_counter;
+			return true;
+		const instruction_t current_instruction = *(instruction_t*)(interpreter->memory + interpreter->program_counter);
 
-		execute_instruction(current_instruction);
-		interpreter->program_counter += 4;
-        SDL_RenderPresent(interpreter->sdl_handler.renderer);
+		if (execute_instruction(current_instruction, interpreter))
+			return false;
+		interpreter->program_counter += 2;
 		SDL_Delay(16);
 	}
+	return true;
 }
 
 int main(int argc, char **argv)
@@ -46,8 +64,8 @@ int main(int argc, char **argv)
 
 	if (!initiated)
 		return EXIT_FAILURE;
-	SDL_SetRenderDrawColor(interpreter.sdl_handler.renderer, 0, 0, 0, 255);
-	main_loop(&interpreter);
+	bool success = main_loop(&interpreter);
+
 	clear_interpreter(&interpreter);
-    return EXIT_SUCCESS;
+    return success ? EXIT_SUCCESS : EXIT_FAILURE;
 }

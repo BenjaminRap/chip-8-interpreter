@@ -42,7 +42,7 @@ bool read_program(interpreter_t* interpreter, char *program_file) {
 bool	init_interpreter(interpreter_t* interpreter, char *program_file) {
 	bzero(interpreter, sizeof(interpreter_t));
 
-	interpreter->memory = (char*)malloc(MEMORY_SIZE * sizeof(char));
+	interpreter->memory = malloc(MEMORY_SIZE);
 	if (!interpreter->memory
 		|| !read_program(interpreter, program_file)
 		|| !init_handler(&interpreter->sdl_handler)) {

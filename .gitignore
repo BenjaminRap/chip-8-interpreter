@@ -1,6 +1,7 @@
 # Project specifics
 chip-8-interpreter
 compile_commands.json
+.cache/
 
 # Prerequisites
 *.d

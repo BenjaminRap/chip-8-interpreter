@@ -5,7 +5,7 @@
 #include "instructions.h"
 #include "interpreter.h"
 
-instruction_t		extract_data(uint16_t data) {
+instruction_t		extract_instruction(uint16_t data) {
 	instruction_t	instruction;
 
 	instruction.opcode = data >> 12;

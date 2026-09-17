@@ -15,7 +15,7 @@ arguments_t	read_arguments(int argc, char **argv) {
 		else if (!arguments.program)
 			arguments.program = arg;
 		else {
-			sprintf(stderr, "Invalid argument : %s", arg);
+			fprintf(stderr, "Invalid argument : %s", arg);
 			arguments.valid = false;
 			break ;
 		}

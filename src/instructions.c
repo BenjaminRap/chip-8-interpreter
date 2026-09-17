@@ -26,7 +26,7 @@ bool	clear_screen(SDL_Renderer* renderer) {
 
 bool	return_from_subroutine(interpreter_t* inter) {
 	if (inter->stack_size == 0) {
-		fprintf(stderr, "Trying to return from an nonexistant subroutine !");
+		fprintf(stderr, "Trying to return from an nonexistant subroutine !\n");
 		return false;
 	}
 	inter->stack_size -= ADDRESS_SIZE;
@@ -39,13 +39,13 @@ bool	return_from_subroutine(interpreter_t* inter) {
 
 bool	call_nnn_subroutine(interpreter_t *inter, uint16_t nnn) {
 	if (nnn > inter->program_size - INSTRUCTION_SIZE) {
-		fprintf(stderr, "Tried to call an invalid subroutine, address : %d !", nnn);
+		fprintf(stderr, "Tried to call an invalid subroutine, address : %d !\n", nnn);
 		return false;
 	}
 	uint16_t	stack_top = inter->stack_size + inter->program_size;
 
 	if (stack_top > MEMORY_SIZE - ADDRESS_SIZE) {
-		fprintf(stderr, "No more room on the stack !");
+		fprintf(stderr, "No more room on the stack !\n");
 		return false;
 	}
 	*(uint16_t*)(inter->memory + stack_top) = inter->program_counter + INSTRUCTION_SIZE;
@@ -56,7 +56,7 @@ bool	call_nnn_subroutine(interpreter_t *inter, uint16_t nnn) {
 
 bool	jump_to_nnn(interpreter_t *inter, uint16_t nnn) {
 	if (nnn > inter->program_size - INSTRUCTION_SIZE) {
-		fprintf(stderr, "Tried to jump to an invalid memory address : %d !", nnn);
+		fprintf(stderr, "Tried to jump to an invalid memory address : %d !\n", nnn);
 		return false;
 	}
 	inter->program_counter = nnn;

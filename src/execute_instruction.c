@@ -47,6 +47,6 @@ bool	execute_instruction(const instruction_t instr, interpreter_t* inter) {
 	}
 	uint8_t*	instruction_bytes = (uint8_t*)&instr;
 
-	fprintf( stderr, "Unknown instruction : %X%X", instruction_bytes[0], instruction_bytes[1]);
+	fprintf( stderr, "Unknown instruction : %X%X\n", instruction_bytes[0], instruction_bytes[1]);
 	return false;
 }

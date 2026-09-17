@@ -4,9 +4,9 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <strings.h>
 
+#include "arguments.h"
 #include "interpreter.h"
 #include "instructions.h"
 
@@ -30,13 +30,12 @@ bool	main_loop(interpreter_t* interpreter) {
 
 int main(int argc, char **argv)
 {
-	if (argc != 2) {
-		fprintf(stderr, "Wrong number of arguments, expected one, the program to run.");
-		return EXIT_FAILURE;
-	}
 	interpreter_t	interpreter;
 
-	bool initiated = init_interpreter(&interpreter, argv[1]);
+	if (!read_arguments(argc, argv, &interpreter.args))
+		return EXIT_FAILURE;
+
+	bool initiated = init_interpreter(&interpreter);
 
 	if (!initiated)
 		return EXIT_FAILURE;

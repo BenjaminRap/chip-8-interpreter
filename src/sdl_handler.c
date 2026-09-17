@@ -37,7 +37,7 @@ bool	init_handler(sdl_handler_t* handler) {
 		goto error;
 	return true;
 error:
-	fprintf(stderr, "%s", SDL_GetError());
+	fprintf(stderr, "%s\n", SDL_GetError());
 	clear_handler(handler);
 	return false;
 }

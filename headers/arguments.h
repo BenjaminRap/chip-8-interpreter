@@ -4,11 +4,10 @@
 # include <stdbool.h>
 
 typedef struct arguments_s {
-	char	*program;
+	char	*program_file;
 	bool	super_chip;
-	bool	valid;
 }	arguments_t;
 
-arguments_t	read_arguments(int argc, char **argv);
+bool	read_arguments(int argc, char **argv, arguments_t* arguments);
 
 #endif // !ARGUMENTS_H

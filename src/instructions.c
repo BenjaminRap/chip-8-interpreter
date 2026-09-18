@@ -36,7 +36,7 @@ bool	return_from_subroutine(interpreter_t* inter) {
 }
 
 bool	call_nnn_subroutine(interpreter_t *inter, uint16_t nnn) {
-	if (nnn > MEMORY_SIZE - INSTRUCTION_SIZE) {
+	if (nnn > MEMORY_SIZE - INSTRUCTION_SIZE  || nnn % 2 != 0) {
 		fprintf(stderr, "Tried to call an invalid subroutine, address : %d !\n", nnn);
 		return false;
 	}
@@ -51,7 +51,7 @@ bool	call_nnn_subroutine(interpreter_t *inter, uint16_t nnn) {
 }
 
 bool	jump_to_nnn(interpreter_t *inter, uint16_t nnn) {
-	if (nnn > MEMORY_SIZE - INSTRUCTION_SIZE) {
+	if (nnn > MEMORY_SIZE - INSTRUCTION_SIZE || nnn % 2 != 0) {
 		fprintf(stderr, "Tried to jump to an invalid memory address : %d !\n", nnn);
 		return false;
 	}

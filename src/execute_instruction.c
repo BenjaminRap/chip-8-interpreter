@@ -37,12 +37,22 @@ bool	execute_instruction(const instruction_t instr, interpreter_t* inter) {
 					return set_x_to_vx_plus_vy(inter, instr.x, instr.y);
 				case 0x5:
 					return set_x_to_vx_minus_vy(inter, instr.x, instr.y);
+				case 0x6:
+					return shift_one_right(inter, instr.x, instr.y);
 				case 0x7:
 					return set_x_to_vy_minus_vx(inter, instr.x, instr.y);
+				case 0xE:
+					return shift_one_left(inter, instr.x, instr.y);
 			}
 			break ;
 		case 0x9:
 			return skip_if_vx_not_equal_vy(inter, instr.x, instr.y);
+		case 0xA:
+			return set_index_to_nnn(inter, instr.nnn);
+		case 0xB:
+			return jump_with_offset(inter, instr.x, instr.nnn);
+		case 0xC:
+			return set_x_to_random_masked_by_nn(inter, instr.x, instr.nn);
 
 	}
 	uint8_t*	instruction_bytes = (uint8_t*)&instr;

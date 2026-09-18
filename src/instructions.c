@@ -1,6 +1,7 @@
 #include <SDL2/SDL_render.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #include "instructions.h"
 #include "interpreter.h"
@@ -150,5 +151,45 @@ bool	set_x_to_vy_minus_vx(interpreter_t* inter, uint8_t x, uint8_t y) {
 	else
 		inter->registers[15] = 0;
 	inter->registers[x] = vy - vx;
+	return true;
+}
+
+bool	shift_one_left(interpreter_t* inter, uint8_t x, uint8_t y) {
+	if (inter->args.extension == CHIP_EXTENSION_NONE)
+		inter->registers[x] = inter->registers[y];
+	inter->registers[15] = inter->registers[x] >> 7;
+	inter->registers[x] = inter->registers[x] << 1;
+	return true;
+}
+
+bool	shift_one_right(interpreter_t* inter, uint8_t x, uint8_t y) {
+	if (inter->args.extension == CHIP_EXTENSION_NONE)
+		inter->registers[x] = inter->registers[y];
+	inter->registers[15] = inter->registers[x] & 0x1;
+	inter->registers[x] = inter->registers[x] >> 1;
+	return true;
+}
+
+bool	set_index_to_nnn(interpreter_t* inter, uint16_t nnn) {
+	if (nnn > inter->program_size - INSTRUCTION_SIZE) {
+		fprintf(stderr, "Tried to set the index register to an invalid memory address : %d !\n", nnn);
+		return false;
+	}
+	inter->index_register = nnn;
+	return true;
+}
+
+bool	jump_with_offset(interpreter_t* inter, uint8_t x, uint16_t nnn) {
+	uint16_t	memory_address;
+
+	if (inter->args.extension == CHIP_EXTENSION_NONE)
+		memory_address = nnn + inter->registers[0];
+	else
+		memory_address = nnn + inter->registers[x];
+	return jump_to_nnn(inter, memory_address);
+}
+
+bool	set_x_to_random_masked_by_nn(interpreter_t* inter, uint8_t x, uint8_t nn) {
+	inter->registers[x] = (uint8_t)rand() & nn;
 	return true;
 }

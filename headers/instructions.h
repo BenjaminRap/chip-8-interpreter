@@ -40,5 +40,10 @@ bool			set_x_to_vx_binary_xor_vy(interpreter_t* inter, uint8_t x, uint8_t y);
 bool			set_x_to_vx_plus_vy(interpreter_t* inter, uint8_t x, uint8_t y);
 bool			set_x_to_vx_minus_vy(interpreter_t* inter, uint8_t x, uint8_t y);
 bool			set_x_to_vy_minus_vx(interpreter_t* inter, uint8_t x, uint8_t y);
+bool			shift_one_left(interpreter_t* inter, uint8_t x, uint8_t y);
+bool			shift_one_right(interpreter_t* inter, uint8_t x, uint8_t y);
+bool			set_index_to_nnn(interpreter_t* inter, uint16_t nnn);
+bool			jump_with_offset(interpreter_t* inter, uint8_t x, uint16_t nnn);
+bool			set_x_to_random_masked_by_nn(interpreter_t* inter, uint8_t x, uint8_t nn);
 
 #endif // !INSTRUCTIONS_H

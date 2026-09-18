@@ -4,7 +4,9 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <strings.h>
+#include <time.h>
 
 #include "arguments.h"
 #include "interpreter.h"
@@ -30,6 +32,7 @@ bool	main_loop(interpreter_t* interpreter) {
 
 int main(int argc, char **argv)
 {
+	srand(time(NULL));
 	interpreter_t	interpreter;
 
 	if (!read_arguments(argc, argv, &interpreter.args))

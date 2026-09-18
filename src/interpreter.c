@@ -9,15 +9,14 @@ static bool read_program_file(interpreter_t* interpreter, FILE* program_file) {
 
 	if (program_size <= 0)
 		goto error;
-	interpreter->program_size = (size_t)program_size;
-	if (program_size > MAX_PROGRAM_SIZE) {
-		fprintf(stderr, "The program size is too big, maximum is %d\n", MAX_PROGRAM_SIZE);
+	if (program_size > MEMORY_SIZE - PROGRAM_ADDRESS) {
+		fprintf(stderr, "The program size is too big, maximum is %d\n", MEMORY_SIZE - PROGRAM_ADDRESS);
 		return false;
 	}
 	rewind(program_file);
-	size_t readden = fread(interpreter->memory, 1, program_size, program_file);
+	size_t readden = fread(interpreter->memory + PROGRAM_ADDRESS, 1, program_size, program_file);
 
-	if (readden != interpreter->program_size)
+	if (readden != (size_t)program_size)
 		goto error;
 	return true;
 error:
@@ -42,6 +41,7 @@ bool read_program(interpreter_t* interpreter, char *program_file) {
 bool	init_interpreter(interpreter_t* interpreter) {
 	bzero(interpreter, sizeof(interpreter_t));
 
+	interpreter->program_counter = PROGRAM_ADDRESS;
 	interpreter->memory = malloc(MEMORY_SIZE);
 	if (!interpreter->memory
 		|| !read_program(interpreter, interpreter->args.program_file)

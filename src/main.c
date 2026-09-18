@@ -16,7 +16,7 @@ bool	execute_instruction(const instruction_t instr, interpreter_t* inter);
 bool	handle_events(void);
 
 bool	main_loop(interpreter_t* interpreter) {
-	while (interpreter->program_counter <= interpreter->program_size - 2) {
+	while (interpreter->program_counter <= MEMORY_SIZE - INSTRUCTION_SIZE) {
 		if (!handle_events())
 			return true;
 		const uint16_t* data = interpreter->memory + interpreter->program_counter;

@@ -26,41 +26,36 @@ bool	clear_screen(SDL_Renderer* renderer) {
 }
 
 bool	return_from_subroutine(interpreter_t* inter) {
-	if (inter->stack_size == 0) {
+	if (inter->stack_top == 0) {
 		fprintf(stderr, "Trying to return from an nonexistant subroutine !\n");
 		return false;
 	}
-	inter->stack_size -= ADDRESS_SIZE;
-	uint16_t	stack_top = inter->stack_size + inter->program_size;
-	uint16_t	memory_address = *(uint16_t*)(inter->memory + stack_top);
-
-	inter->program_counter = memory_address;
+	inter->stack_top--;
+	inter->program_counter = inter->stack[inter->stack_top];
 	return true;
 }
 
 bool	call_nnn_subroutine(interpreter_t *inter, uint16_t nnn) {
-	if (nnn > inter->program_size - INSTRUCTION_SIZE) {
+	if (nnn > MEMORY_SIZE - INSTRUCTION_SIZE) {
 		fprintf(stderr, "Tried to call an invalid subroutine, address : %d !\n", nnn);
 		return false;
 	}
-	uint16_t	stack_top = inter->stack_size + inter->program_size;
-
-	if (stack_top > MEMORY_SIZE - ADDRESS_SIZE) {
+	if (inter->stack_top == STACK_SIZE) {
 		fprintf(stderr, "No more room on the stack !\n");
 		return false;
 	}
-	*(uint16_t*)(inter->memory + stack_top) = inter->program_counter + INSTRUCTION_SIZE;
-	inter->stack_size += ADDRESS_SIZE;
-	inter->program_counter = nnn;
+	inter->stack[inter->stack_top] = inter->program_counter;
+	inter->stack_top++;
+	inter->program_counter = nnn - INSTRUCTION_SIZE;
 	return true;
 }
 
 bool	jump_to_nnn(interpreter_t *inter, uint16_t nnn) {
-	if (nnn > inter->program_size - INSTRUCTION_SIZE) {
+	if (nnn > MEMORY_SIZE - INSTRUCTION_SIZE) {
 		fprintf(stderr, "Tried to jump to an invalid memory address : %d !\n", nnn);
 		return false;
 	}
-	inter->program_counter = nnn;
+	inter->program_counter = nnn - INSTRUCTION_SIZE;
 	return true;
 }
 
@@ -171,7 +166,7 @@ bool	shift_one_right(interpreter_t* inter, uint8_t x, uint8_t y) {
 }
 
 bool	set_index_to_nnn(interpreter_t* inter, uint16_t nnn) {
-	if (nnn > inter->program_size - INSTRUCTION_SIZE) {
+	if (nnn > MEMORY_SIZE - INSTRUCTION_SIZE) {
 		fprintf(stderr, "Tried to set the index register to an invalid memory address : %d !\n", nnn);
 		return false;
 	}

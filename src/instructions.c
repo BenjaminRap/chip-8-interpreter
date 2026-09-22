@@ -5,6 +5,7 @@
 
 #include "instructions.h"
 #include "interpreter.h"
+#include "sdl_handler.h"
 
 instruction_t		extract_instruction(uint16_t data) {
 	instruction_t	instruction;
@@ -18,11 +19,8 @@ instruction_t		extract_instruction(uint16_t data) {
 	return instruction;
 }
 
-bool	clear_screen(SDL_Renderer* renderer) {
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-	SDL_RenderClear(renderer);
-    SDL_RenderPresent(renderer);
-	return true;
+bool	clear_screen(interpreter_t* inter) {
+	return sdl_clear_handler(&inter->sdl_handler);
 }
 
 bool	return_from_subroutine(interpreter_t* inter) {
@@ -187,4 +185,12 @@ bool	jump_with_offset(interpreter_t* inter, uint8_t x, uint16_t nnn) {
 bool	set_x_to_random_masked_by_nn(interpreter_t* inter, uint8_t x, uint8_t nn) {
 	inter->registers[x] = (uint8_t)rand() & nn;
 	return true;
+}
+
+bool	display(interpreter_t* inter, uint8_t x, uint8_t y, uint8_t n) {
+	uint8_t	vx = inter->registers[x];
+	uint8_t	vy = inter->registers[y];
+	void*	sprite = inter->memory + inter->index_register;
+
+	return sdl_display(&inter->sdl_handler, sprite, n, vx, vy);
 }

@@ -53,7 +53,8 @@ bool	execute_instruction(const instruction_t instr, interpreter_t* inter) {
 			return jump_with_offset(inter, instr.x, instr.nnn);
 		case 0xC:
 			return set_x_to_random_masked_by_nn(inter, instr.x, instr.nn);
-
+		case 0xD:
+			return display(inter, instr.x, instr.y, instr.n);
 	}
 	uint8_t*	instruction_bytes = (uint8_t*)&instr;
 

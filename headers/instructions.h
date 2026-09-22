@@ -19,7 +19,7 @@ typedef struct instruction_s {
 }	instruction_t;
 
 instruction_t	extract_instruction(uint16_t data);
-bool 			clear_screen(SDL_Renderer *renderer);
+bool 			clear_screen(interpreter_t* inter);
 bool			call_nnn_subroutine(interpreter_t *interpreter, uint16_t memory_address);
 bool			return_from_subroutine(interpreter_t* interpreter);
 bool			jump_to_nnn(interpreter_t *interpreter, uint16_t memory_address);
@@ -45,5 +45,6 @@ bool			shift_one_right(interpreter_t* inter, uint8_t x, uint8_t y);
 bool			set_index_to_nnn(interpreter_t* inter, uint16_t nnn);
 bool			jump_with_offset(interpreter_t* inter, uint8_t x, uint16_t nnn);
 bool			set_x_to_random_masked_by_nn(interpreter_t* inter, uint8_t x, uint8_t nn);
+bool			display(interpreter_t* inter, uint8_t x, uint8_t y, uint8_t n);
 
 #endif // !INSTRUCTIONS_H

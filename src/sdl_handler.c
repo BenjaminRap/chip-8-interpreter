@@ -41,3 +41,17 @@ error:
 	clear_handler(handler);
 	return false;
 }
+
+bool	sdl_clear_handler(sdl_handler_t* handler) {
+	if (SDL_SetRenderDrawColor(handler->renderer, 0, 0, 0, 255) < 0
+		|| SDL_RenderClear(handler->renderer) < 0) {
+		fprintf(stderr, "%s\n", SDL_GetError());
+		return false;
+	}
+    SDL_RenderPresent(handler->renderer);
+	return true;
+}
+
+bool	sdl_display(sdl_handler_t* handler, void* sprite, uint8_t height, uint8_t x, uint8_t y) {
+	return true;
+}

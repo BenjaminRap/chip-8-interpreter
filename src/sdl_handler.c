@@ -1,4 +1,6 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_pixels.h>
+#include <SDL2/SDL_render.h>
 #include <stdbool.h>
 
 #include "sdl_handler.h"
@@ -6,6 +8,8 @@
 void	clear_sdl_handler(sdl_handler_t* handler) {
 	if (!handler)
 		return ;
+	if (handler->texture)
+		SDL_DestroyTexture(handler->texture);
 	if (handler->renderer)
 		SDL_DestroyRenderer(handler->renderer);
 	if (handler->window)
@@ -34,6 +38,12 @@ bool	init_sdl_handler(sdl_handler_t* handler, uint8_t width, uint8_t height) {
 			SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
 	if (!handler->renderer)
+		goto error;
+
+	handler->texture = SDL_CreateTexture(handler->renderer, SDL_PIXELFORMAT_RGB24, \
+		SDL_TEXTUREACCESS_STREAMING, width, height);
+
+	if (!handler->texture)
 		goto error;
 	return true;
 error:

@@ -9,6 +9,7 @@
 typedef struct sdl_handler_s {
 	SDL_Window*		window;
 	SDL_Renderer*	renderer;
+	SDL_Texture*	texture;
 	bool			sdl_initiated;
 } sdl_handler_t;
 

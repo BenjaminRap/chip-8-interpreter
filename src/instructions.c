@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "instructions.h"
 #include "interpreter.h"
@@ -19,6 +20,7 @@ instruction_t		extract_instruction(uint16_t data) {
 }
 
 bool	clear_screen(interpreter_t* inter) {
+	memset(inter->screen, inter->screen_width * inter->screen_height / 8, 1);
 	return inter->display->clear_render(inter->display->data);
 }
 
@@ -187,9 +189,18 @@ bool	set_x_to_random_masked_by_nn(interpreter_t* inter, uint8_t x, uint8_t nn) {
 }
 
 bool	display(interpreter_t* inter, uint8_t x, uint8_t y, uint8_t n) {
-	uint8_t	vx = inter->registers[x];
-	uint8_t	vy = inter->registers[y];
-	void*	sprite = inter->memory + inter->index_register;
+	uint8_t		vx = inter->registers[x];
+	uint8_t		vy = inter->registers[y];
+	uint8_t*	sprite = inter->memory + inter->index_register;
+	uint8_t		offset = vx % 8;
+	uint8_t		remaining = 8 - offset;
+	uint8_t		byte = vy * inter->screen_width / 8;
+	uint8_t		screen_width = inter->screen_width / 8;
 
+	for (int i = 0; i < n; i++) {
+		inter->screen[byte] ^= sprite[n] >> offset;
+		inter->screen[byte + 1] ^= sprite[n] << remaining;
+		byte += screen_width;
+	}
 	return inter->display->display(inter->display->data, sprite, n, vx, vy);
 }

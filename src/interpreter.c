@@ -51,7 +51,9 @@ bool	init_interpreter(interpreter_t* interpreter, arguments_t* args, i_display_t
 	interpreter->args = args;
 	interpreter->program_counter = PROGRAM_ADDRESS;
 	interpreter->memory = malloc(MEMORY_SIZE);
+	interpreter->screen = (uint8_t*)calloc(width * height / 8, 1);
 	if (!interpreter->memory
+		|| !interpreter->screen
 		|| !read_program(interpreter, interpreter->args->program_file)) {
 		clear_interpreter(interpreter);
 		return false;
@@ -64,5 +66,7 @@ void clear_interpreter(interpreter_t* interpreter) {
 		return ;
 	if (interpreter->memory)
 		free(interpreter->memory);
+	if (interpreter->screen)
+		free(interpreter->screen);
 	bzero(interpreter, sizeof(interpreter_t));
 }

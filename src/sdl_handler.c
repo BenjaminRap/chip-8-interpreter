@@ -3,7 +3,7 @@
 
 #include "sdl_handler.h"
 
-void	clear_handler(sdl_handler_t* handler) {
+void	clear_sdl_handler(sdl_handler_t* handler) {
 	if (!handler)
 		return ;
 	if (handler->renderer)
@@ -15,7 +15,7 @@ void	clear_handler(sdl_handler_t* handler) {
 	bzero(handler, sizeof(sdl_handler_t));
 }
 
-bool	init_handler(sdl_handler_t* handler) {
+bool	init_sdl_handler(sdl_handler_t* handler, uint8_t width, uint8_t height) {
 	bzero(handler, sizeof(sdl_handler_t));
 
     int error = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
@@ -24,7 +24,7 @@ bool	init_handler(sdl_handler_t* handler) {
 		goto error;
 	handler->sdl_initiated = true;
 	handler->window = SDL_CreateWindow("chip-8", SDL_WINDOWPOS_CENTERED,
-			SDL_WINDOWPOS_CENTERED, DISPLAY_SIZE_X, DISPLAY_SIZE_Y,
+			SDL_WINDOWPOS_CENTERED, width, height,
 			SDL_WINDOW_MAXIMIZED);
 
 	if (!handler->window)
@@ -38,11 +38,11 @@ bool	init_handler(sdl_handler_t* handler) {
 	return true;
 error:
 	fprintf(stderr, "%s\n", SDL_GetError());
-	clear_handler(handler);
+	clear_sdl_handler(handler);
 	return false;
 }
 
-bool	sdl_clear_handler(sdl_handler_t* handler) {
+bool	sdl_clear(sdl_handler_t* handler) {
 	if (SDL_SetRenderDrawColor(handler->renderer, 0, 0, 0, 255) < 0
 		|| SDL_RenderClear(handler->renderer) < 0) {
 		fprintf(stderr, "%s\n", SDL_GetError());
@@ -53,5 +53,10 @@ bool	sdl_clear_handler(sdl_handler_t* handler) {
 }
 
 bool	sdl_display(sdl_handler_t* handler, void* sprite, uint8_t height, uint8_t x, uint8_t y) {
+	(void)handler;
+	(void)sprite;
+	(void)height;
+	(void)x;
+	(void)y;
 	return true;
 }

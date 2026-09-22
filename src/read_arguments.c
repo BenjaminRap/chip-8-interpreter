@@ -9,11 +9,11 @@ int	compare_strings(const void* a, const void* b) {
 }
 
 bool	read_arguments(int argc, char **argv, arguments_t* arguments) {
-	const static char* flags[FLAG_COUNT] = {
+	static const char* flags[FLAG_COUNT] = {
 		"--chip-48",
 		"--super-chip",
 	}; // Should be in the same order as the enum
-	const static int	extension_flags_end = 2;
+	static const int	extension_flags_end = 2;
 	bool				is_valid = false;
 
 	bzero(arguments, sizeof(arguments_t));

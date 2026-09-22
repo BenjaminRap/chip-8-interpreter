@@ -4,7 +4,7 @@ bool	execute_instruction(const instruction_t instr, interpreter_t* inter) {
 	switch (instr.opcode) {
 		case 0x0 : {
 			if (instr.nnn == 0x0E0)
-				return clear_screen(inter->sdl_handler.renderer);
+				return clear_screen(inter);
 			if (instr.nnn == 0x0EE)
 				return return_from_subroutine(inter);
 			break;

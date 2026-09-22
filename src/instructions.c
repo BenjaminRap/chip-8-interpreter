@@ -5,7 +5,6 @@
 
 #include "instructions.h"
 #include "interpreter.h"
-#include "sdl_handler.h"
 
 instruction_t		extract_instruction(uint16_t data) {
 	instruction_t	instruction;
@@ -20,7 +19,7 @@ instruction_t		extract_instruction(uint16_t data) {
 }
 
 bool	clear_screen(interpreter_t* inter) {
-	return sdl_clear_handler(&inter->sdl_handler);
+	return inter->display->clear_render(inter->display->data);
 }
 
 bool	return_from_subroutine(interpreter_t* inter) {
@@ -148,7 +147,7 @@ bool	set_x_to_vy_minus_vx(interpreter_t* inter, uint8_t x, uint8_t y) {
 }
 
 bool	shift_one_left(interpreter_t* inter, uint8_t x, uint8_t y) {
-	if (inter->args.extension == CHIP_EXTENSION_NONE)
+	if (inter->args->extension == CHIP_EXTENSION_NONE)
 		inter->registers[x] = inter->registers[y];
 	inter->registers[15] = inter->registers[x] >> 7;
 	inter->registers[x] = inter->registers[x] << 1;
@@ -156,7 +155,7 @@ bool	shift_one_left(interpreter_t* inter, uint8_t x, uint8_t y) {
 }
 
 bool	shift_one_right(interpreter_t* inter, uint8_t x, uint8_t y) {
-	if (inter->args.extension == CHIP_EXTENSION_NONE)
+	if (inter->args->extension == CHIP_EXTENSION_NONE)
 		inter->registers[x] = inter->registers[y];
 	inter->registers[15] = inter->registers[x] & 0x1;
 	inter->registers[x] = inter->registers[x] >> 1;
@@ -175,7 +174,7 @@ bool	set_index_to_nnn(interpreter_t* inter, uint16_t nnn) {
 bool	jump_with_offset(interpreter_t* inter, uint8_t x, uint16_t nnn) {
 	uint16_t	memory_address;
 
-	if (inter->args.extension == CHIP_EXTENSION_NONE)
+	if (inter->args->extension == CHIP_EXTENSION_NONE)
 		memory_address = nnn + inter->registers[0];
 	else
 		memory_address = nnn + inter->registers[x];
@@ -192,5 +191,5 @@ bool	display(interpreter_t* inter, uint8_t x, uint8_t y, uint8_t n) {
 	uint8_t	vy = inter->registers[y];
 	void*	sprite = inter->memory + inter->index_register;
 
-	return sdl_display(&inter->sdl_handler, sprite, n, vx, vy);
+	return inter->display->display(inter->display->data, sprite, n, vx, vy);
 }

@@ -1,5 +1,9 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <strings.h>
+
 #include "interpreter.h"
-#include "sdl_handler.h"
+#include "arguments.h"
 
 static bool read_program_file(interpreter_t* interpreter, FILE* program_file) {
 	if (fseek(program_file, 0, SEEK_END))
@@ -38,14 +42,17 @@ bool read_program(interpreter_t* interpreter, char *program_file) {
 	return err;
 }
 
-bool	init_interpreter(interpreter_t* interpreter) {
+bool	init_interpreter(interpreter_t* interpreter, arguments_t* args, i_display_t* display, \
+			uint8_t width, uint8_t height) {
 	bzero(interpreter, sizeof(interpreter_t));
-
+	interpreter->display = display;
+	interpreter->screen_height = width;
+	interpreter->screen_width = height;
+	interpreter->args = args;
 	interpreter->program_counter = PROGRAM_ADDRESS;
 	interpreter->memory = malloc(MEMORY_SIZE);
 	if (!interpreter->memory
-		|| !read_program(interpreter, interpreter->args.program_file)
-		|| !init_handler(&interpreter->sdl_handler)) {
+		|| !read_program(interpreter, interpreter->args->program_file)) {
 		clear_interpreter(interpreter);
 		return false;
 	}
@@ -55,7 +62,6 @@ bool	init_interpreter(interpreter_t* interpreter) {
 void clear_interpreter(interpreter_t* interpreter) {
 	if (!interpreter)
 		return ;
-	clear_handler(&interpreter->sdl_handler);
 	if (interpreter->memory)
 		free(interpreter->memory);
 	bzero(interpreter, sizeof(interpreter_t));
